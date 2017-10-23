@@ -3,6 +3,8 @@
   "version": "1.0.0",
   "description": "Utility tool to append custom ServiceWorker code to existing CreateReactApp one.",
   "main": "index.js",
+  "preferGlobal": true,
+  "bin": "./index.js",
   "scripts": {
     "test": "cra-append-sw"
   },
@@ -20,5 +22,10 @@
   "bugs": {
     "url": "https://github.com/bbhlondon/cra-append-sw/issues"
   },
-  "homepage": "https://github.com/bbhlondon/cra-append-sw#readme"
+  "homepage": "https://github.com/bbhlondon/cra-append-sw#readme",
+  "dependencies": {
+    "commander": "^2.11.0",
+    "memory-fs": "^0.4.1",
+    "webpack": "^3.8.1"
+  }
 }
