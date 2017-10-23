@@ -1,6 +1,6 @@
 # cra-append-sw
 
-  Utility tool to append custom code to ServiceWorker created by [Create React App](https://github.com/facebookincubator/create-react-app) one.
+  Utility tool to append custom code to ServiceWorker created by [Create React App](https://github.com/facebookincubator/create-react-app).
 
   ## Installation
 
