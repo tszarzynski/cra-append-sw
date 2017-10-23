@@ -4,7 +4,7 @@
 
 ## Installation
 
-    $ npm install commander --save
+    $ npm install cra-append-sw --save
 
 ## Usage
 
