@@ -1,0 +1,24 @@
+{
+  "name": "cra-append-sw",
+  "version": "1.0.0",
+  "description": "Utility tool to append custom ServiceWorker code to existing CreateReactApp one.",
+  "main": "index.js",
+  "scripts": {
+    "test": "cra-append-sw"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bbhlondon/cra-append-sw.git"
+  },
+  "keywords": [
+    "node",
+    "react",
+    "serviceworker"
+  ],
+  "author": "BBH London",
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/bbhlondon/cra-append-sw/issues"
+  },
+  "homepage": "https://github.com/bbhlondon/cra-append-sw#readme"
+}
