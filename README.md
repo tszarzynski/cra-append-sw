@@ -2,7 +2,7 @@
 
   Utility tool to append custom code to ServiceWorker created by [Create React App](https://github.com/facebookincubator/create-react-app). 
   
-  It allows to keep the default CRA configuration (no ejecting). It simply appends custom code to the ServiceWorker file created by CRA build scripts. By default, it bundles the code using very basic Webpack configuration (this can be omitted; see options).
+  It allows to keep the default CRA configuration (no ejecting). It simply appends custom code to the ServiceWorker file created by CRA build scripts. By default, it bundles the code using very basic Webpack configuration (this can be omitted; see options). 
 
 ## Installation
 
@@ -16,7 +16,9 @@
 ### Options:
 
     -s, --skip-compile  Skip compilation
-    -h, --help          output usage information
+    -h, --help          Output usage information
+    -e, --env           Path to environment variables file
+    -d, --dev,          Development mode. Creates `public/firebase-messaging-sw.js` instead of appending the code to `build/service-worker.js`
 
 ## Usage with Create React App
 

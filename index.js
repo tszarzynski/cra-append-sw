@@ -3,9 +3,11 @@
 const fs = require("fs");
 const MemoryFs = require("memory-fs");
 const webpack = require("webpack");
+const Dotenv = require("dotenv-webpack");
 const program = require("commander");
 
-const EXISTING_SW_FILE_PATH = "build/service-worker.js";
+const BUILD_SW_FILE_PATH = "build/service-worker.js";
+const DEV_SW_FILE_PATH = "public/firebase-messaging-sw.js";
 const BUNDLE_FILE_NAME = "bundle.js";
 
 /**
@@ -14,6 +16,8 @@ const BUNDLE_FILE_NAME = "bundle.js";
 program
   .arguments("<file>")
   .option("-s, --skip-compile", "Skip compilation")
+  .option("-e, --env", "Path to environment variables files")
+  .option("-d, --dev", "Development mode")
   .action(function(file) {
     if (program.skipCompile) {
       read(file).then(result => append(result));
@@ -37,6 +41,10 @@ function compile(entry) {
       path: "/"
     },
     plugins: [
+      new Dotenv({
+        path: "./.env", // Path to .env file (this is the default)
+        safe: false // load .env.example (defaults to "false" which does not use dotenv-safe)
+      }),
       new webpack.optimize.UglifyJsPlugin({
         compress: {
           warnings: false,
@@ -101,18 +109,9 @@ function read(entry) {
  * @returns {Promise}
  */
 function append(code) {
-  return new Promise((resolve, reject) => {
-    // Read exisitng SW file
-    fs.readFile(EXISTING_SW_FILE_PATH, "utf8", (error, data) => {
-      if (error) {
-        reject(error);
-      }
-
-      // append custom code
-      const result = data + code;
-
-      // Write modified SW file
-      fs.writeFile(EXISTING_SW_FILE_PATH, result, "utf8", error => {
+  if (program.dev) {
+    return new Promise((resolve, reject) => {
+      fs.writeFile(DEV_SW_FILE_PATH, code, "utf8", error => {
         if (error) {
           reject(error);
         }
@@ -120,5 +119,27 @@ function append(code) {
         resolve();
       });
     });
-  });
+  } else {
+    return new Promise((resolve, reject) => {
+      // Read exisitng SW file
+      fs.readFile(BUILD_SW_FILE_PATH, "utf8", (error, data) => {
+        if (error) {
+          reject(error);
+        }
+        console.log(code);
+        
+        // append custom code
+        const result = data + code;
+
+        // Write modified SW file
+        fs.writeFile(BUILD_SW_FILE_PATH, result, "utf8", error => {
+          if (error) {
+            reject(error);
+          }
+
+          resolve();
+        });
+      });
+    });
+  }
 }
