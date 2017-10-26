@@ -18,7 +18,9 @@
     -s, --skip-compile  Skip compilation
     -h, --help          Output usage information
     -e, --env           Path to environment variables file
-    -d, --dev,          Development mode. Creates `public/firebase-messaging-sw.js` instead of appending the code to `build/service-worker.js`
+    -d, --dev,          Development mode. Creates `public/<file>` instead of appending the code to `build/service-worker.js`
+    -b, --build,          Build mode. Creates `build/<file>` instead of appending the code to `build/service-worker.js`
+    
 
 ## Usage with Create React App
 

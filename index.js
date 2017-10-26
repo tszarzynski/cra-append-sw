@@ -17,12 +17,13 @@ program
   .arguments("<file>")
   .option("-s, --skip-compile", "Skip compilation")
   .option("-e, --env", "Path to environment variables files")
+  .option("-b, --build", "Build mode")
   .option("-d, --dev", "Development mode")
   .action(function(file) {
     if (program.skipCompile) {
-      read(file).then(result => append(result));
+      read(file).then(result => append(result, file));
     } else {
-      compile(file).then(({ result, stats }) => append(result));
+      compile(file).then(({ result, stats }) => append(result, file));
     }
   })
   .parse(process.argv);
@@ -108,18 +109,11 @@ function read(entry) {
  * @param {String} code 
  * @returns {Promise}
  */
-function append(code) {
+function append(code, file) {
   if (program.dev) {
-    // Create new file in development mode "public/firebase-messaging-sw.js"
-    return new Promise((resolve, reject) => {
-      fs.writeFile(DEV_SW_FILE_PATH, code, "utf8", error => {
-        if (error) {
-          reject(error);
-        }
-
-        resolve();
-      });
-    });
+    return writeFile(code, `public/${file}`);
+  } else if (program.build) {
+    return writeFile(code, `build/${file}`);
   } else {
     // Append to "build/service-worker.js"
     return new Promise((resolve, reject) => {
@@ -143,4 +137,15 @@ function append(code) {
       });
     });
   }
+}
+
+function writeFile(content, file) {
+  return new Promise((resolve, reject) => {
+    fs.writeFile(file, content, "utf8", error => {
+      if (error) {
+        reject(error);
+      }
+      resolve();
+    });
+  });
 }
