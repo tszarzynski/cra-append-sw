@@ -110,6 +110,7 @@ function read(entry) {
  */
 function append(code) {
   if (program.dev) {
+    // Create new file in development mode "public/firebase-messaging-sw.js"
     return new Promise((resolve, reject) => {
       fs.writeFile(DEV_SW_FILE_PATH, code, "utf8", error => {
         if (error) {
@@ -120,14 +121,14 @@ function append(code) {
       });
     });
   } else {
+    // Append to "build/service-worker.js"
     return new Promise((resolve, reject) => {
       // Read exisitng SW file
       fs.readFile(BUILD_SW_FILE_PATH, "utf8", (error, data) => {
         if (error) {
           reject(error);
         }
-        console.log(code);
-        
+
         // append custom code
         const result = data + code;
 
