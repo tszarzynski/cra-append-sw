@@ -1,6 +1,6 @@
 {
   "name": "cra-append-sw",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Utility tool to append custom code to ServiceWorker created by Create React App",
   "main": "index.js",
   "preferGlobal": true,
