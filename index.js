@@ -16,10 +16,13 @@ const BUNDLE_FILE_NAME = "bundle.js";
  */
 program
   .arguments("<file>")
-  .option("-s, --skip-compile", "Skip compilation")
-  .option("-e, --env", "Path to environment variables files")
-  .option("-b, --build", "Build mode")
-  .option("-d, --dev", "Development mode")
+  .option("-s, --skip-compile", "skip compilation")
+  .option(
+    "-e, --env [path]",
+    "path to environment variables files [./.env]",
+    "./.env"
+  )
+  .option("-m, --mode <mode>", "output mode [dev|build]", /^(dev|build)$/i)
   .action(function(file) {
     if (program.skipCompile) {
       read(file).then(result => append(result, file));
@@ -44,7 +47,7 @@ function compile(entry) {
     },
     plugins: [
       new Dotenv({
-        path: "./.env", // Path to .env file (this is the default)
+        path: program.env, // Path to .env file (this is the default)
         safe: false // load .env.example (defaults to "false" which does not use dotenv-safe)
       }),
       new webpack.optimize.UglifyJsPlugin({
@@ -111,10 +114,10 @@ function read(entry) {
  * @returns {Promise}
  */
 function append(code, file) {
-  if (program.dev) {
+  if (program.mode === "dev") {
     const filename = path.basename(file);
     return writeFile(code, `public/${filename}`);
-  } else if (program.build) {
+  } else if (program.mode === "build") {
     const filename = path.basename(file);
     return writeFile(code, `build/${filename}`);
   } else {

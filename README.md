@@ -15,11 +15,10 @@
 
 ### Options:
 
-    -s, --skip-compile  Skip compilation
-    -h, --help          Output usage information
-    -e, --env           Path to environment variables file
-    -d, --dev,          Development mode. Creates `public/<file>` instead of appending the code to `build/service-worker.js`
-    -b, --build,          Build mode. Creates `build/<file>` instead of appending the code to `build/service-worker.js`
+    -s, --skip-compile      Skip compilation
+    -h, --help              Output usage information
+    -e, --env [path]        (./.env) Path to environment variables file
+    -m, --mode [mode]       Output mode. If `dev`, it creates `public/<file>` instead of appending the code to `build/service-worker.js`. If `build`, it creates `build/<file>` instead of appending the code to `build/service-worker.js`
     
 
 ## Usage with Create React App
