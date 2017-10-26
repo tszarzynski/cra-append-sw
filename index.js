@@ -5,6 +5,7 @@ const MemoryFs = require("memory-fs");
 const webpack = require("webpack");
 const Dotenv = require("dotenv-webpack");
 const program = require("commander");
+const path = require("path");
 
 const BUILD_SW_FILE_PATH = "build/service-worker.js";
 const DEV_SW_FILE_PATH = "public/firebase-messaging-sw.js";
@@ -111,9 +112,11 @@ function read(entry) {
  */
 function append(code, file) {
   if (program.dev) {
-    return writeFile(code, `public/${file}`);
+    const filename = path.basename(file);
+    return writeFile(code, `public/${filename}`);
   } else if (program.build) {
-    return writeFile(code, `build/${file}`);
+    const filename = path.basename(file);
+    return writeFile(code, `build/${filename}`);
   } else {
     // Append to "build/service-worker.js"
     return new Promise((resolve, reject) => {
