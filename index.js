@@ -35,7 +35,7 @@ program
 /**
    * Compile entry file using WebPack
    * 
-   * @param {String} Path to entry file 
+   * @param {String} entry Path to entry file 
    * @returns {Promise}
    */
 function compile(entry) {
@@ -45,22 +45,26 @@ function compile(entry) {
       filename: BUNDLE_FILE_NAME,
       path: "/"
     },
+    module: {
+      rules: [
+        {
+          test: /\.js$/,
+          exclude: /(node_modules|bower_components)/,
+          use: {
+            loader: "babel-loader",
+            options: {
+              presets: ["@babel/preset-env"]
+            }
+          }
+        }
+      ]
+    },
     plugins: [
       new Dotenv({
         path: program.env, // Path to .env file (this is the default)
         safe: false // load .env.example (defaults to "false" which does not use dotenv-safe)
       }),
-      new webpack.optimize.UglifyJsPlugin({
-        compress: {
-          warnings: false,
-          comparisons: false
-        },
-        output: {
-          comments: false,
-          ascii_only: true
-        },
-        sourceMap: false
-      })
+      new webpack.optimize.UglifyJsPlugin()
     ]
   });
 
