@@ -53,7 +53,7 @@ function compile(entry) {
           use: {
             loader: "babel-loader",
             options: {
-              presets: ["@babel/preset-env"]
+              presets: ["env"]
             }
           }
         }
