@@ -8,11 +8,10 @@ const program = require("commander");
 const path = require("path");
 
 const BUILD_SW_FILE_PATH = "build/service-worker.js";
-const DEV_SW_FILE_PATH = "public/firebase-messaging-sw.js";
 const BUNDLE_FILE_NAME = "bundle.js";
 
 /**
- * Command line options 
+ * Command line options
  */
 program
   .arguments("<file>")
@@ -22,7 +21,11 @@ program
     "path to environment variables files [./.env]",
     "./.env"
   )
-  .option("-m, --mode <mode>", "output mode [dev|build]", /^(dev|build)$/i)
+  .option(
+    "-m, --mode <mode>",
+    "output mode [dev|build|replace]",
+    /^(dev|build)$/i
+  )
   .action(function(file) {
     if (program.skipCompile) {
       read(file).then(result => append(result, file));
@@ -33,11 +36,11 @@ program
   .parse(process.argv);
 
 /**
-   * Compile entry file using WebPack
-   * 
-   * @param {String} entry Path to entry file 
-   * @returns {Promise}
-   */
+ * Compile entry file using WebPack
+ *
+ * @param {String} entry Path to entry file
+ * @returns {Promise}
+ */
 function compile(entry) {
   const compiler = webpack({
     entry: entry,
@@ -96,7 +99,7 @@ function compile(entry) {
 
 /**
  * Read entry file
- * 
+ *
  * @param {String} entry Path to entry file
  * @returns {Promise}
  */
@@ -114,8 +117,8 @@ function read(entry) {
 
 /**
  * Append custonm code to exisitng ServiceWorker
- * 
- * @param {String} code 
+ *
+ * @param {String} code
  * @returns {Promise}
  */
 function append(code, file) {
@@ -125,6 +128,9 @@ function append(code, file) {
   } else if (program.mode === "build") {
     const filename = path.basename(file);
     return writeFile(code, `build/${filename}`);
+  } else if (program.mode === "replace") {
+    const filename = path.basename(file);
+    return writeFile(code, BUILD_SW_FILE_PATH);
   } else {
     // Append to "build/service-worker.js"
     return new Promise((resolve, reject) => {

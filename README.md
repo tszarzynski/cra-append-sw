@@ -12,14 +12,18 @@
 
     $ cra-append-sw [options] <file>
 
-
-### Options:
+### Options
 
     -s, --skip-compile      Skip compilation
     -h, --help              Output usage information
     -e, --env [path]        (./.env) Path to environment variables file
-    -m, --mode [mode]       Output mode. If `dev`, it creates `public/<file>` instead of appending the code to `build/service-worker.js`. If `build`, it creates `build/<file>` instead of appending the code to `build/service-worker.js`
-    
+    -m, --mode [mode]       Output mode
+
+#### Output modes
+
+- `dev` creates `public/<file>` instead of appending the code to `build/service-worker.js`
+- `build` creates `build/<file>` instead of appending the code to `build/service-worker.js`
+- `replace` simply replaces `build/service-worker.js`
 
 ## Usage with Create React App
 
