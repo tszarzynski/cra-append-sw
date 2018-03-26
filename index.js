@@ -24,7 +24,7 @@ program
   .option(
     "-m, --mode <mode>",
     "output mode [dev|build|replace]",
-    /^(dev|build)$/i
+    /^(dev|build|replace)$/i
   )
   .action(function(file) {
     if (program.skipCompile) {
