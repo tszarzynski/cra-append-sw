@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-
+require("babel-polyfill");
 const fs = require("fs");
 const MemoryFs = require("memory-fs");
 const webpack = require("webpack");
@@ -43,7 +43,7 @@ program
  */
 function compile(entry) {
   const compiler = webpack({
-    entry: entry,
+    entry: ["babel-polyfill", entry],
     output: {
       filename: BUNDLE_FILE_NAME,
       path: "/"
