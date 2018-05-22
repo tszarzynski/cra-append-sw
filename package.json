@@ -24,15 +24,15 @@
   },
   "homepage": "https://github.com/bbhlondon/cra-append-sw#readme",
   "dependencies": {
-    "babel-core": "^6.26.0",
-    "babel-loader": "^7.1.2",
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.4",
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-polyfill": "^6.26.0",
-    "babel-preset-env": "^1.6.1",
-    "commander": "^2.11.0",
-    "dotenv-webpack": "^1.5.4",
+    "babel-preset-env": "^1.7.0",
+    "commander": "^2.15.1",
+    "dotenv-webpack": "^1.5.5",
     "memory-fs": "^0.4.1",
     "path": "^0.12.7",
-    "webpack": "^3.8.1"
+    "webpack": "^3.12.0"
   }
 }
