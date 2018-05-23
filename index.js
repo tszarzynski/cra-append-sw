@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-require("babel-polyfill");
 const fs = require("fs");
 const MemoryFs = require("memory-fs");
 const webpack = require("webpack");
@@ -43,7 +42,8 @@ program
  */
 function compile(entry) {
   const compiler = webpack({
-    entry: ["babel-polyfill", entry],
+    mode: program.mode === "dev" ? "development" : "production",
+    entry: [entry],
     output: {
       filename: BUNDLE_FILE_NAME,
       path: "/"
@@ -56,7 +56,17 @@ function compile(entry) {
           use: {
             loader: "babel-loader",
             options: {
-              presets: ["env"]
+              presets: [
+                [
+                  "@babel/preset-env",
+                  {
+                    targets: {
+                      browsers: ["defaults"]
+                    }
+                  }
+                ]
+              ],
+              plugins: ["@babel/plugin-transform-runtime"]
             }
           }
         }
@@ -67,8 +77,8 @@ function compile(entry) {
         path: program.env, // Path to .env file (this is the default)
         safe: false, // load .env.example (defaults to "false" which does not use dotenv-safe)
         silent: true
-      }),
-      new webpack.optimize.UglifyJsPlugin()
+      })
+      // new webpack.optimize.UglifyJsPlugin()
     ]
   });
 
