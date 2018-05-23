@@ -1,8 +1,7 @@
 {
   "name": "cra-append-sw",
-  "version": "2.4.0",
-  "description":
-    "Utility tool to append custom code to ServiceWorker created by Create React App",
+  "version": "2.5.0",
+  "description": "Utility tool to append custom code to ServiceWorker created by Create React App",
   "main": "./index.js",
   "preferGlobal": true,
   "bin": "./index.js",
@@ -13,7 +12,11 @@
     "type": "git",
     "url": "git+https://github.com/bbhlondon/cra-append-sw.git"
   },
-  "keywords": ["node", "react", "serviceworker"],
+  "keywords": [
+    "node",
+    "react",
+    "serviceworker"
+  ],
   "author": "BBH London",
   "license": "BSD-3-Clause",
   "bugs": {
