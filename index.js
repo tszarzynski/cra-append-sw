@@ -27,6 +27,14 @@ program
     /^(dev|build|replace)$/i
   )
   .action(function(file) {
+    if (program.mode === "dev") {
+      process.env.BABEL_ENV = "development";
+      process.env.NODE_ENV = "development";
+    } else {
+      process.env.BABEL_ENV = "production";
+      process.env.NODE_ENV = "production";
+    }
+
     if (program.skipCompile) {
       read(file).then(result => append(result, file));
     } else {
@@ -56,7 +64,7 @@ function compile(entry) {
           use: {
             loader: "babel-loader",
             options: {
-              presets: ["env"]
+              presets: [require.resolve("babel-preset-react-app")]
             }
           }
         }
