@@ -29,5 +29,5 @@
 
   In `package.json` modify build script to:
 
-    "start": "react-scripts build && cra-append-sw --mode dev ./custom-sw.js",
+    "start": "react-scripts start && cra-append-sw --mode dev ./custom-sw.js",
     "build": "react-scripts build && cra-append-sw ./custom-sw.js",
