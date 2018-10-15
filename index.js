@@ -66,7 +66,7 @@ function compile(entry) {
             options: {
               presets: [
                 [
-                  "@babel/preset-react-app",
+                  "react-app",
                   {
                     targets: {
                       browsers: ["defaults"]
