@@ -1,6 +1,6 @@
 {
   "name": "cra-append-sw",
-  "version": "2.7.0",
+  "version": "2.8.0",
   "description": "Utility tool to append custom code to ServiceWorker created by Create React App",
   "main": "./index.js",
   "preferGlobal": true,
@@ -26,13 +26,13 @@
   "dependencies": {
     "@babel/core": "^7.0.0",
     "@babel/plugin-transform-runtime": "^7.0.0",
-    "babel-preset-react-app": "^5.0.0",
+    "babel-preset-react-app": "^9.1.0",
     "@babel/runtime": "^7.0.0",
     "babel-loader": "^8.0.0",
     "@babel/polyfill": "^7.0.0",
-    "commander": "^2.15.1",
+    "commander": "^4.0.1",
     "dotenv-webpack": "^1.5.5",
-    "memory-fs": "^0.4.1",
+    "memory-fs": "^0.5.0",
     "path": "^0.12.7",
     "webpack": "^4.8.3"
   }
