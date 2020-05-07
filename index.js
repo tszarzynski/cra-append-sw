@@ -85,7 +85,8 @@ function compile(entry) {
         path: program.env, // Path to .env file (this is the default)
         safe: false, // load .env.example (defaults to "false" which does not use dotenv-safe)
         silent: true,
-        systemvars: true // Load all system variables and REACT .env as well
+        systemvars: true, // Load all system variables and REACT .env as well
+        expand: true // This option make it possible to use global variables inside your .env file e.g. REACT_APP_VERSION=$npm_package_version
       })
       // new webpack.optimize.UglifyJsPlugin()
     ]
