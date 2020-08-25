@@ -1,0 +1,3 @@
+node_modules
+build/
+custom-sw.js

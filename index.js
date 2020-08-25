@@ -5,9 +5,61 @@ const webpack = require("webpack");
 const Dotenv = require("dotenv-webpack");
 const program = require("commander");
 const path = require("path");
+const chalk = require("chalk");
 
 const BUILD_SW_FILE_PATH = "build/service-worker.js";
 const BUNDLE_FILE_NAME = "bundle.js";
+
+/**
+ * Custom log function to print output only when
+ * the --no-logs has not been used
+ */
+function printf() {
+  if (program.logs) console.log(Object.values(arguments).join(""));
+}
+/**
+ * 
+ * @param {Error} err 
+ * 
+ * This function handles the errors thrown in various
+ * Promises in the code
+ */
+function handleRejects(err) {
+  Log.e(err.name);
+  for (let line of err.message.split("\n")) {
+    Log.e(line);
+  }
+  process.exit();
+}
+/**
+ * Logger
+ * 
+ * This will be used in different parts of the code
+ * to show relevant output to the user
+ */
+const Log = {
+  /**
+   * Show info
+   */
+  i: function () {
+    printf("[  ", chalk.cyan("INFO"), "   ] ", ...arguments);
+  },
+  /**
+   * Show error
+   * 
+   * Here console.log is used instead of printf because
+   * errors should be shown even if logs are disabled
+   */
+  e: function () {
+    console.log("[ ", chalk.red("ERROR"), " ] ", ...arguments);
+  },
+  /**
+   * Show success messages
+   */
+  s: function () {
+    printf("[ ", chalk.green("SUCCESS"), " ] ", ...arguments);
+  },
+};
 
 /**
  * Command line options
@@ -25,7 +77,11 @@ program
     "output mode [dev|build|replace]",
     /^(dev|build|replace)$/i
   )
-  .action(function(file) {
+  .option(
+    "-n, --no-logs",
+    "Disable all logs by the program",
+  )
+  .action(function (file) {
     if (program.mode === "dev") {
       process.env.BABEL_ENV = "development";
       process.env.NODE_ENV = "development";
@@ -33,12 +89,41 @@ program
       process.env.BABEL_ENV = "production";
       process.env.NODE_ENV = "production";
     }
+    Log.i("Starting... ");
 
-    if (program.skipCompile) {
-      read(file).then(result => append(result, file));
-    } else {
-      compile(file).then(({ result, stats }) => append(result, file));
-    }
+    //Read the source file
+    read(file)
+      .then((content) => {
+        Log.i("Appending to file...");
+
+        //Append to main service-worker
+        append(content, file)
+          .then(() => {
+            Log.s("Append successful")
+
+            //Make sure skipCompile isn't enabled
+            if (!program.skipCompile) {
+              Log.i("Starting compile...");
+
+              //Compile the code
+              compile(BUILD_SW_FILE_PATH)
+                .then((code) => {
+                  Log.s("Compiled Succesfully")
+                  Log.i("Starting write...");
+
+                  //Write the result to main file
+                  writeFile(code.result, BUILD_SW_FILE_PATH)
+                    .then(() => {
+                      Log.s("Service Worker appended successfully");
+                    })
+                    .catch(handleRejects);
+                })
+                .catch(handleRejects);
+            }
+          })
+          .catch(handleRejects);
+      })
+      .catch(handleRejects);
   })
   .parse(process.argv);
 
@@ -54,7 +139,7 @@ function compile(entry) {
     entry: [entry],
     output: {
       filename: BUNDLE_FILE_NAME,
-      path: "/"
+      path: "/",
     },
     module: {
       rules: [
@@ -69,16 +154,16 @@ function compile(entry) {
                   "react-app",
                   {
                     targets: {
-                      browsers: ["defaults"]
-                    }
-                  }
-                ]
+                      browsers: ["defaults"],
+                    },
+                  },
+                ],
               ],
-              plugins: ["@babel/plugin-transform-runtime"]
-            }
-          }
-        }
-      ]
+              plugins: ["@babel/plugin-transform-runtime"],
+            },
+          },
+        },
+      ],
     },
     plugins: [
       new Dotenv({
@@ -86,10 +171,10 @@ function compile(entry) {
         safe: false, // load .env.example (defaults to "false" which does not use dotenv-safe)
         silent: true,
         systemvars: true, // Load all system variables and REACT .env as well
-        expand: true // This option make it possible to use global variables inside your .env file e.g. REACT_APP_VERSION=$npm_package_version
-      })
+        expand: true, // This option make it possible to use global variables inside your .env file e.g. REACT_APP_VERSION=$npm_package_version
+      }),
       // new webpack.optimize.UglifyJsPlugin()
-    ]
+    ],
   });
 
   compiler.outputFileSystem = new MemoryFs();
@@ -103,7 +188,7 @@ function compile(entry) {
           new Error(
             stats.toString({
               errorDetails: true,
-              warnings: true
+              warnings: true,
             })
           )
         );
@@ -142,14 +227,12 @@ function read(entry) {
  * @returns {Promise}
  */
 function append(code, file) {
+  const filename = path.basename(file);
   if (program.mode === "dev") {
-    const filename = path.basename(file);
     return writeFile(code, `public/${filename}`);
   } else if (program.mode === "build") {
-    const filename = path.basename(file);
     return writeFile(code, `build/${filename}`);
   } else if (program.mode === "replace") {
-    const filename = path.basename(file);
     return writeFile(code, BUILD_SW_FILE_PATH);
   } else {
     // Append to "build/service-worker.js"
@@ -161,10 +244,10 @@ function append(code, file) {
         }
 
         // append custom code
-        const result = data + code;
+        const result = data + '\n' + code;
 
         // Write modified SW file
-        fs.writeFile(BUILD_SW_FILE_PATH, result, "utf8", error => {
+        fs.writeFile(BUILD_SW_FILE_PATH, result, "utf8", (error) => {
           if (error) {
             reject(error);
           }
@@ -178,7 +261,7 @@ function append(code, file) {
 
 function writeFile(content, file) {
   return new Promise((resolve, reject) => {
-    fs.writeFile(file, content, "utf8", error => {
+    fs.writeFile(file, content, "utf8", (error) => {
       if (error) {
         reject(error);
       }
