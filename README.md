@@ -18,6 +18,7 @@
     -h, --help              Output usage information
     -e, --env [path]        (./.env) Path to environment variables file
     -m, --mode [mode]       Output mode
+    -n, --no-logs           Disable all logs by the program
 
 #### Output modes
 
