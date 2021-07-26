@@ -14,10 +14,11 @@
 
 ### Options
 
-    -s, --skip-compile      Skip compilation
-    -h, --help              Output usage information
-    -e, --env [path]        (./.env) Path to environment variables file
-    -m, --mode [mode]       Output mode
+    -s, --skip-compile            Skip compilation
+    -h, --help                    Output usage information
+    -e, --env [path]              (./.env) Path to environment variables file
+    -m, --mode [mode]             Output mode
+    -d, --build-path [path]       (./build) Path to react build output
 
 #### Output modes
 
