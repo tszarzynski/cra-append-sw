@@ -6,8 +6,8 @@ const Dotenv = require("dotenv-webpack");
 const program = require("commander");
 const path = require("path");
 
-const BUILD_SW_FILE_PATH = "build/service-worker.js";
 const BUNDLE_FILE_NAME = "bundle.js";
+let BUILD_SW_FILE_PATH;
 
 /**
  * Command line options
@@ -15,6 +15,11 @@ const BUNDLE_FILE_NAME = "bundle.js";
 program
   .arguments("<file>")
   .option("-s, --skip-compile", "skip compilation")
+  .option(
+    "-d, --build-path [path]",
+    "path of build artifacts [./build]",
+    "./build"
+  )
   .option(
     "-e, --env [path]",
     "path to environment variables files [./.env]",
@@ -26,6 +31,8 @@ program
     /^(dev|build|replace)$/i
   )
   .action(function(file) {
+    BUILD_SW_FILE_PATH = `${ program.buildPath }/service-worker.js`
+
     if (program.mode === "dev") {
       process.env.BABEL_ENV = "development";
       process.env.NODE_ENV = "development";
@@ -147,7 +154,7 @@ function append(code, file) {
     return writeFile(code, `public/${filename}`);
   } else if (program.mode === "build") {
     const filename = path.basename(file);
-    return writeFile(code, `build/${filename}`);
+    return writeFile(code, `${program.buildPath}/${filename}`);
   } else if (program.mode === "replace") {
     const filename = path.basename(file);
     return writeFile(code, BUILD_SW_FILE_PATH);
